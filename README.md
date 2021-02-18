@@ -42,6 +42,9 @@ study react demo
 ​	所有的模块请求会放到一个请求文件中单独管理
 
 10.项目使用AntDesign
-
+11. import 顺序
+  第三方插件库
+  工具类 -- 网络请求 actionCreators utils
+  组件
 ​	
 

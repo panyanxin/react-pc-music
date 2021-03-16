@@ -47,4 +47,6 @@ study react demo
   工具类 -- 网络请求 actionCreators utils
   组件
 ​	
+<!-- 问题1 -->
+背景图通过require不显示需加.default
 

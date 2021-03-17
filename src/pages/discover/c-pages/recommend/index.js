@@ -1,24 +1,33 @@
-import React, { memo, useEffect,  } from 'react'
-import { useDispatch, useSelector, shallowEqual } from 'react-redux'
-import { getTopBannerAction } from './store/actionCreators'
+import React, { memo } from 'react'
+
+import TopBanner from './c-cpns/top-banner';
+import HotRecommend from './c-cpns/hot-recommend';
+import NewAlbum from './c-cpns/new-album';
+import RecommendRanking from './c-cpns/recommend-ranking';
+// import UserLogin from './c-cpns/user-login';
+// import SettleSinger from './c-cpns/settle-singer';
+// import HotAnchor from './c-cpns/hot-anchor';
+import { 
+  RecommendWrapper,
+  Content,
+  RecommendLeft,
+  RecommendRight
+} from './style';
 
 function Recommend(props) {
-  // 1.组件和redux 关联, 获取数据和进行操作
-  const {topBanners} = useSelector(state => ({
-    // topBanners: state.recommend.topBanners
-    // topBanners: state.get('recommend').get('topBanners')
-    topBanners: state.getIn(['recommend', 'topBanners'])
-  }), shallowEqual) 
-  const dispatch = useDispatch()
-  
-  // 发送网络请求
-  useEffect(() => {
-    dispatch(getTopBannerAction())
-  }, [dispatch])
-    return (
-    <div>
-      <h2>Recommend: {topBanners.length}</h2>
-    </div>
+
+  return (
+    <RecommendWrapper>
+      <TopBanner />
+      <Content className='wrap-v2'>
+        <RecommendLeft>
+            <HotRecommend/>
+            <NewAlbum/>
+            <RecommendRanking/>
+        </RecommendLeft>
+        <RecommendRight></RecommendRight>
+      </Content>
+    </RecommendWrapper>
   )
 }
 

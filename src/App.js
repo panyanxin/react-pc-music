@@ -8,6 +8,7 @@ import store from './store';
 
 import AppFooter from '@/components/app-footer'
 import AppHeader from '@/components/app-header'
+import AppPlayerBar from './pages/player/app-player-bar';
 
 export default memo(function App() {
   return (
@@ -18,6 +19,7 @@ export default memo(function App() {
           {renderRoutes(routes)}
         </Suspense>
         <AppFooter />
+        <AppPlayerBar />
       </HashRouter>
     </Provider>
   )

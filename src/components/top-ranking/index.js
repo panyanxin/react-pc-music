@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { getSizeImage } from '@/utils/format-utils';
-// import { getSongDetailAction } from '@/pages/player/store';
+import { getSongDetailAction } from '@/pages/player/store';
 
 import { TopRankingWrapper } from './style';
 
@@ -16,7 +16,7 @@ export default memo(function HYTopRanking(props) {
 
   // other handle
   const playMusic = (item) => {
-    // dispatch(getSongDetailAction(item.id));
+    dispatch(getSongDetailAction(item.id));
   }
 
   return (

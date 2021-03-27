@@ -7,8 +7,8 @@ import { getSizeImage, formatDate, getPlaySong } from '@/utils/format-utils';
 
 import { 
   getSongDetailAction,
-  // changeSequenceAction,
-  // changeCurrentIndexAndSongAction,
+  changeSequenceAction,
+  changeCurrentIndexAndSongAction,
   // changeCurrentLyricIndexAction 
 } from '../store/actionCreators';
 import {
@@ -29,12 +29,12 @@ export default memo(function AppPlayerBar() {
   // redux-hooks
   const { 
     currentSong, 
-    // sequence, 
+    sequence, 
     // lyricList,
     // currentLyricIndex
   } = useSelector(state => ({
     currentSong: state.getIn(["player", "currentSong"]),
-    // sequence: state.getIn(["player", "sequence"]),
+    sequence: state.getIn(["player", "sequence"]),
     // lyricList: state.getIn(["player", "lyricList"]),
     // currentLyricIndex: state.getIn(["player", "currentLyricIndex"])
   }), shallowEqual);
@@ -46,7 +46,12 @@ export default memo(function AppPlayerBar() {
     dispatch(getSongDetailAction(167876))
   }, [dispatch])
   useEffect(() => {
-    audioRef.current.src = getPlaySong(currentSong.id);
+    audioRef.current.src = getPlaySong(currentSong.id)
+    audioRef.current.play().then(res => {
+      setIsPlaying(true);
+    }).catch(err => {
+      setIsPlaying(false);
+    })
   }, [currentSong])
 
   // other handle
@@ -59,10 +64,22 @@ export default memo(function AppPlayerBar() {
   // orther func
   
   const handleMusicEnded = () => {
-
+    if (sequence === 2) { // 单曲循环
+      audioRef.current.currentTime = 0;
+      audioRef.current.play();
+    } else {
+      dispatch(changeCurrentIndexAndSongAction(1));
+    }
   }
   const changeMusic = (tag) => {
-    // dispatch(changeCurrentIndexAndSongAction(tag));
+    dispatch(changeCurrentIndexAndSongAction(tag));
+  }
+  const changeSequence = () =>{
+    let currentSequence = sequence + 1
+    if (currentSequence > 2) {
+      currentSequence = 0
+    }
+    dispatch(changeSequenceAction(currentSequence));
   }
   const playMusic = useCallback(() => {
     isPlaying ? audioRef.current.pause(): audioRef.current.play();
@@ -78,8 +95,10 @@ export default memo(function AppPlayerBar() {
   }
   const sliderChange = useCallback((value) => {
     setIsChanging(true);
+    const currentTime = value / 100 * duration;
+    setCurrentTime(currentTime);
     setProgress(value);
-  }, [])
+  }, [duration])
 
   const sliderAfterChange = useCallback((value) => {
     const currentTime = value / 100 * duration / 1000;
@@ -130,15 +149,14 @@ export default memo(function AppPlayerBar() {
             </div>
           </div>
         </PlayInfo>
-        <Operator>
+        <Operator sequence={sequence}>
           <div className="left">
             <button className="sprite_player btn favor"></button>
             <button className="sprite_player btn share"></button>
           </div>
           <div className="right sprite_player">
             <button className="sprite_player btn volume"></button>
-            {/* onClick={e => changeSequence()} */}
-            <button className="sprite_player btn loop" ></button>
+            <button className="sprite_player btn loop" onClick={e => changeSequence()}></button>
             <button className="sprite_player btn playlist"></button>
           </div>
         </Operator>

@@ -9,7 +9,7 @@ import {
   getSongDetailAction,
   changeSequenceAction,
   changeCurrentIndexAndSongAction,
-  // changeCurrentLyricIndexAction 
+  changeCurrentLyricIndexAction 
 } from '../store/actionCreators';
 import {
   PlaybarWrapper,
@@ -30,13 +30,13 @@ export default memo(function AppPlayerBar() {
   const { 
     currentSong, 
     sequence, 
-    // lyricList,
-    // currentLyricIndex
+    lyricList,
+    currentLyricIndex
   } = useSelector(state => ({
     currentSong: state.getIn(["player", "currentSong"]),
     sequence: state.getIn(["player", "sequence"]),
-    // lyricList: state.getIn(["player", "lyricList"]),
-    // currentLyricIndex: state.getIn(["player", "currentLyricIndex"])
+    lyricList: state.getIn(["player", "lyricList"]),
+    currentLyricIndex: state.getIn(["player", "currentLyricIndex"])
   }), shallowEqual);
   const dispatch = useDispatch()
   
@@ -62,7 +62,6 @@ export default memo(function AppPlayerBar() {
   const showCurrentTime = formatDate(currentTime, "mm:ss");
 
   // orther func
-  
   const handleMusicEnded = () => {
     if (sequence === 2) { // 单曲循环
       audioRef.current.currentTime = 0;
@@ -91,6 +90,25 @@ export default memo(function AppPlayerBar() {
     if (!isChanging) {
       setCurrentTime(currentTime * 1000);
       setProgress(currentTime * 1000 / duration * 100);
+    }
+
+    // 获取当前的歌词
+    let i = 0;
+    for (; i < lyricList.length; i++) {
+      let lyricItem = lyricList[i];
+      if (currentTime * 1000 < lyricItem.time) {
+        break;
+      }
+    }
+    if (currentLyricIndex !== i - 1) {
+      dispatch(changeCurrentLyricIndexAction(i - 1));
+      const content = lyricList[i - 1] && lyricList[i - 1].content
+      message.open({
+        key: "lyric",
+        content: content,
+        duration: 0,
+        className: "lyric-class"
+      })
     }
   }
   const sliderChange = useCallback((value) => {

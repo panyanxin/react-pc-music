@@ -31,28 +31,32 @@ export const changeSequenceAction = (sequence) => ({  // 修改播放模式
   sequence
 });
 
-export const changeCurrentIndexAndSongAction = (tag) => { // 修改当前播放歌曲
+export const changeCurrentIndexAndSongAction = (tag) => {
   return (dispatch, getState) => {
-    const playList = getState().getIn(["player", "playList"])
-    const sequence = getState().getIn(['player', 'sequence'])
-    let currentSongIndex = getState().getIn(['player', 'currentSongIndex'])
+    const playList = getState().getIn(["player", "playList"]);
+    const sequence = getState().getIn(["player", "sequence"]);
+    let currentSongIndex = getState().getIn(["player", "currentSongIndex"]);
+    debugger
     switch (sequence) {
-      case 1: //随机播放
-        let randomIndex = getRandomNumber(playList.length)
+      case 1: // 随机播放
+        let randomIndex = getRandomNumber(playList.length);
         while (randomIndex === currentSongIndex) {
           randomIndex = getRandomNumber(playList.length);
         }
         currentSongIndex = randomIndex;
-        break
-      default: // 其他播放 顺序 单曲
-        currentSongIndex += tag
-        if (currentSongIndex >= playList.length) currentSongIndex = 0
-        if (currentSongIndex < playList.length) currentSongIndex = playList.length - 1
+        break;
+      default: // 顺序播放
+        currentSongIndex += tag;
+        if (currentSongIndex >= playList.length) currentSongIndex = 0;
+        if (currentSongIndex < 0) currentSongIndex = playList.length - 1;
     }
 
     const currentSong = playList[currentSongIndex];
     dispatch(changeCurrentSongAction(currentSong));
     dispatch(changeCurrentSongIndexAction(currentSongIndex));
+
+    // 请求歌词
+    dispatch(getLyricAction(currentSong.id));
   }
 }
 
@@ -82,14 +86,19 @@ export const getSongDetailAction = (ids) => { // 获取歌曲详情
         dispatch(changePlayListAction(newPlayList));
         dispatch(changeCurrentSongIndexAction(newPlayList.length - 1));
         dispatch(changeCurrentSongAction(song));
+        // 3.请求歌词
+        dispatch(getLyricAction(song.id));
       })
 
-      // 3.请求歌词
-      dispatch(getLyricAction(song.id));
     }
 
   }
 }
+
+export const changeCurrentLyricIndexAction = (index) => ({
+  type: actionTypes.CHANGE_CURRENT_LYRIC_INDEX,
+  index
+})
 
 export const getLyricAction = (id) => {
   return dispatch => {

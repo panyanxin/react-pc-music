@@ -11,6 +11,7 @@ import Djradio from "@/pages/discover/c-pages/djradio";
 import Ranking from "@/pages/discover/c-pages/ranking";
 import Recommend from "@/pages/discover/c-pages/recommend";
 import Songs from "@/pages/discover/c-pages/songs";
+import Player from "../pages/player";
 
 import Mime from "../pages/mine";
 import Friend from "../pages/friend";
@@ -60,10 +61,10 @@ const routes = [
         path: "/discover/album",
         component: Album
       },
-      // {
-      //   path: "/discover/player",
-      //   component: Player
-      // }
+      {
+        path: "/discover/player",
+        component: Player
+      }
     ]
   },
   {

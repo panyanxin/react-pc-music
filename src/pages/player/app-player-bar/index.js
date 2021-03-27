@@ -1,5 +1,6 @@
 import React, { memo, useEffect, useRef, useState, useCallback } from 'react'
 import { useDispatch, useSelector, shallowEqual } from 'react-redux'
+import { NavLink } from 'react-router-dom';
 import { Slider, message } from 'antd';
 
 import { getSizeImage, formatDate, getPlaySong } from '@/utils/format-utils';
@@ -105,9 +106,9 @@ export default memo(function AppPlayerBar() {
         </Control>
         <PlayInfo>
           <div className='image'>
-            <a href="#">
+            <NavLink to="/discover/player">
               <img src={getSizeImage(picUrl, 35)} alt=""/>
-            </a>
+            </NavLink>
           </div>
           <div className='info'>
             <div className='song'>
